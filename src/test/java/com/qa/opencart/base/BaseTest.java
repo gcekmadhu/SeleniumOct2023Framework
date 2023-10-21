@@ -18,6 +18,7 @@ public class BaseTest {
     public ResultsPage resultsPage;
     public ProductsInfoPage prInf;
 
+
     @BeforeTest
     public void setup(){
         dr=new DriverFactory();

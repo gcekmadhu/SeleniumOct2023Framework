@@ -17,26 +17,9 @@ public class BasePage {
         this.driver=driver;
     }
 
-    public String getTitleSafely(int timeout,String value){
-        wait=new WebDriverWait(driver, Duration.ofSeconds(timeout));
-
-        if(wait.until(ExpectedConditions.titleIs(value))){
-            return driver.getTitle();
-        }
-        return null;
-
+    public void clickSafely(By locator){
+        driver.findElement(locator).click();
     }
 
 
-    public WebElement getElementSafely(By locator){
-        return driver.findElement(locator);
-    }
-
-    public boolean isDisplayedSafely(By locator){
-        return getElementSafely(locator).isDisplayed();
-    }
-
-    public List<WebElement> getElementsSafely(By locator){
-        return driver.findElements(locator);
-    }
 }

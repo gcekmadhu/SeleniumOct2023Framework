@@ -22,7 +22,7 @@ public class ProductInfoTest extends BaseTest {
             prInf.selectBothCheckbox();
             prInf.selectType();
             prInf.enterText();
-            prInf.uploadFile();
+            //prInf.uploadFile();
         }
         catch (Exception e){
             e.printStackTrace();

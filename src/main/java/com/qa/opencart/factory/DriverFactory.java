@@ -18,6 +18,7 @@ import java.util.Properties;
 public class DriverFactory {
     public WebDriver driver;
     public Properties prop;
+    public OptionsManager optionsManager;
 
     /**
      * Takes browser name and return driver related to browser passed as argument
@@ -25,17 +26,18 @@ public class DriverFactory {
      * @return WebDriver of browser passed
      */
     public WebDriver initDriver(Properties prop){
+        optionsManager=new OptionsManager(prop);
         String browser=prop.getProperty("browser");
         System.out.println("Browser is : "+browser);
         switch (browser.toLowerCase().trim()){
             case "chrome":
-                driver=new ChromeDriver();
+                driver=new ChromeDriver(optionsManager.getChromeOptions());
                 break;
             case "firefox":
-                driver=new FirefoxDriver();
+                driver=new FirefoxDriver(optionsManager.getFirefoxOptions());
                 break;
             case "edge":
-                driver=new EdgeDriver();
+                driver=new EdgeDriver(optionsManager.getEdgeOptions());
                 break;
             default:
                 System.out.println("Please pass right browser");
@@ -53,12 +55,42 @@ public class DriverFactory {
      */
     public Properties initProp(){
         prop =new Properties();
+        FileInputStream fis = null;
+        String env=System.getProperty("env");
+        if(env==null) {
+            try {
+                fis = new FileInputStream("./src/test/resources/config/config.properties");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            System.out.println("Running on env : "+env);
+            try {
+                switch (env.toLowerCase().trim()) {
+                    case "qa":
+                        fis = new FileInputStream("./src/test/resources/config/qa.config.properties");
+                        break;
+                    case "stage":
+                        fis = new FileInputStream("./src/test/resources/config/stage.config.properties");
+                        break;
+                    default:
+                        System.out.println("Please pass right env name");
+                        throw new ApplicationException("INVALID ENV");
+                        
+
+                }
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        }
         try {
-            FileInputStream fis=new FileInputStream("./src/test/resources/config/config.properties");
             prop.load(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (IOException e){
             e.printStackTrace();
         }
         return prop;
